@@ -90,7 +90,7 @@ minetest.register_chatcommand("revokeme", {
 
 minetest.register_chatcommand("giveall", {
 	params = "<privilege>|all",
-	description = "Give give item to all players online",
+	description = "Give item to all players online",
 	func = function(name, param)
 		if param == "" then
 			return false, "Invalid parameters (see /help giveall)"
