@@ -59,3 +59,50 @@ core.register_chatcommand("kickall", {
 		return true, "Kicked everyone but you"
 	end,
 })
+
+core.register_chatcommand("revokeall", {
+	params = "<privilege>|all",
+	description = "Revoke privilege from all other players online",
+	func = function(name, param)
+		if param == "" then
+			return false, "Invalid parameters (see /help revokeall)"
+		end
+		for _,player in pairs(minetest.get_connected_players()) do
+			local playername = player:get_player_name()
+			if playername ~= name then
+				execute_chatcommand(name, "/revoke "..playername.." "..param)
+			end
+		end
+
+		core.log("action", name..' revoked ('..param..') from everyone')
+		return true, "You revoked:"..param.." from everyone"
+	end,
+})
+
+core.register_chatcommand("revokeme", {
+	params = "<privilege>|all",
+	description = "Revoke privilege from yourself",
+	func = function(name, param)
+		if param == "" then
+			return false, "Invalid parameters (see /help revokeall)"
+		end
+		execute_chatcommand(name, "/revoke "..name.." "..param)
+	end,
+})
+
+core.register_chatcommand("giveall", {
+	params = "<privilege>|all",
+	description = "Give give item to all players online",
+	func = function(name, param)
+		if param == "" then
+			return false, "Invalid parameters (see /help giveall)"
+		end
+		for _,player in pairs(minetest.get_connected_players()) do
+			local playername = player:get_player_name()
+			execute_chatcommand(name, "/give "..playername.." "..param)
+		end
+
+		core.log("action", name..' given everyone ('..param..')')
+		return true, "You given everyone: "..param
+	end,
+})
