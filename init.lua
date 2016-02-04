@@ -1,9 +1,7 @@
 
-
 --
 -- Chat commands
 --
-
 
 local function execute_chatcommand(pname, cmd)
 	for _,func in pairs(minetest.registered_on_chat_messages) do
@@ -11,7 +9,7 @@ local function execute_chatcommand(pname, cmd)
 	end
 end
 
-core.register_chatcommand("grantme", {
+minetest.register_chatcommand("grantme", {
 	params = "<privilege>|all",
 	description = "Give privilege to yourself",
 	func = function(name, param)
@@ -22,7 +20,7 @@ core.register_chatcommand("grantme", {
 	end,
 })
 
-core.register_chatcommand("grantall", {
+minetest.register_chatcommand("grantall", {
 	params = "<privilege>|all",
 	description = "Give privilege to all players online",
 	func = function(name, param)
@@ -34,12 +32,12 @@ core.register_chatcommand("grantall", {
 			execute_chatcommand(name, "/grant "..playername.." "..param)
 		end
 
-		core.log("action", name..' granted everyone ('..param..')')
+		minetest.log("action", name..' granted everyone ('..param..')')
 		return true, "You granted everyone: "..param
 	end,
 })
 
-core.register_chatcommand("kickall", {
+minetest.register_chatcommand("kickall", {
 	params = "[reason]",
 	description = "kick all player but the caller",
 	privs = {kick=true},
@@ -55,12 +53,12 @@ core.register_chatcommand("kickall", {
 		and reason ~= "" then
 			log_message = log_message.." with reason \"" .. reason .. "\""
 		end
-		core.log("action", log_message)
+		minetest.log("action", log_message)
 		return true, "Kicked everyone but you"
 	end,
 })
 
-core.register_chatcommand("revokeall", {
+minetest.register_chatcommand("revokeall", {
 	params = "<privilege>|all",
 	description = "Revoke privilege from all other players online",
 	func = function(name, param)
@@ -74,12 +72,12 @@ core.register_chatcommand("revokeall", {
 			end
 		end
 
-		core.log("action", name..' revoked ('..param..') from everyone')
+		minetest.log("action", name..' revoked ('..param..') from everyone')
 		return true, "You revoked:"..param.." from everyone"
 	end,
 })
 
-core.register_chatcommand("revokeme", {
+minetest.register_chatcommand("revokeme", {
 	params = "<privilege>|all",
 	description = "Revoke privilege from yourself",
 	func = function(name, param)
@@ -90,7 +88,7 @@ core.register_chatcommand("revokeme", {
 	end,
 })
 
-core.register_chatcommand("giveall", {
+minetest.register_chatcommand("giveall", {
 	params = "<privilege>|all",
 	description = "Give give item to all players online",
 	func = function(name, param)
@@ -102,7 +100,7 @@ core.register_chatcommand("giveall", {
 			execute_chatcommand(name, "/give "..playername.." "..param)
 		end
 
-		core.log("action", name..' given everyone ('..param..')')
+		minetest.log("action", name..' given everyone ('..param..')')
 		return true, "You given everyone: "..param
 	end,
 })
