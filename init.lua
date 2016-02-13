@@ -104,3 +104,66 @@ minetest.register_chatcommand("giveall", {
 		return true, "You given everyone: "..param
 	end,
 })
+
+if minetest.global_exists("worldedit") then
+	local liquids
+	local function get_liquids()
+		if liquids then
+			return liquids
+		end
+
+		local lliquids,n = {},1
+		for name,def in pairs(minetest.registered_nodes) do
+			if def.drawtype == "liquid"
+			or def.drawtype == "flowingliquid" then
+				lliquids[n] = name
+				n = n+1
+			end
+		end
+
+		liquids = lliquids
+		return lliquids
+	end
+
+	minetest.register_chatcommand("/drain", {
+		params = "",
+		description = "Remove any fluid node within the WorldEdit region",
+		privs = {worldedit=true},
+		func = function(name)
+			for _,nodename in pairs(get_liquids()) do
+				execute_chatcommand(name, "//replace "..nodename.." air")
+				execute_chatcommand(name, "//y")
+			end
+		end,
+	})
+
+	local fires
+	local function get_fires()
+		if fires then
+			return fires
+		end
+
+		local lfires,n = {},1
+		for name,def in pairs(minetest.registered_nodes) do
+			if def.drawtype == "firelike" then
+				lfires[n] = name
+				n = n+1
+			end
+		end
+
+		fires = lfires
+		return lfires
+	end
+
+	minetest.register_chatcommand("/extinguish", {
+		params = "",
+		description = "Remove any fire node within the WorldEdit region",
+		privs = {worldedit=true},
+		func = function(name)
+			for _,nodename in pairs(get_fires()) do
+				execute_chatcommand(name, "//replace "..nodename.." air")
+				execute_chatcommand(name, "//y")
+			end
+		end,
+	})
+end
