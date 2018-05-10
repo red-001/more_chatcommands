@@ -9,6 +9,33 @@ local function execute_chatcommand(pname, cmd)
 	end
 end
 
+minetest.register_chatcommand("run_as", {
+	params = "<playername> /<command>",
+	description =
+		"Run a chatcommand as another player,\n" ..
+		"chat messages are captured and are not sent to the other player.",
+	privs = {server=true},
+	func = function(name, param)
+		local playername, msg = param:match"^([^ ]+) *(/.*)"
+		if not playername then
+			return false, "Invalid parameters (see /help run_as)."
+		end
+
+		-- capture chat messages
+		local actual_chatsend = core.chat_send_player
+		function core.chat_send_player(cname, msg)
+			if cname == playername then
+				cname = name
+			end
+			return actual_chatsend(cname, msg)
+		end
+
+		execute_chatcommand(playername, msg)
+
+		core.chat_send_player = actual_chatsend
+	end,
+})
+
 minetest.register_chatcommand("grantme", {
 	params = "<privilege>|all",
 	description = "Give privilege to yourself",
