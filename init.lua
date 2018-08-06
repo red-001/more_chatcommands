@@ -132,6 +132,26 @@ minetest.register_chatcommand("giveall", {
 	end,
 })
 
+minetest.register_chatcommand("listitems", {
+	params = "<regexp>",
+	description = "Find names of registered items",
+	privs = {},
+	func = function(name, param)
+		local names = {}
+		for itemname in pairs(minetest.registered_items) do
+			if string.find(itemname, param) then
+				names[#names+1] = itemname
+			end
+		end
+		table.sort(names)
+		-- make every second itemname red to increase readability
+		for i = 2, #names, 2 do
+			names[i] = minetest.colorize("#ffaaaa", names[i])
+		end
+		return true, table.concat(names, ", ")
+	end,
+})
+
 if minetest.global_exists("worldedit") then
 	local liquids
 	local function get_liquids()
