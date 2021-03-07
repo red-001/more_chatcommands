@@ -22,17 +22,17 @@ minetest.register_chatcommand("run_as", {
 		end
 
 		-- capture chat messages
-		local actual_chatsend = core.chat_send_player
-		function core.chat_send_player(cname, msg)
+		local actual_chatsend = minetest.chat_send_player
+		function minetest.chat_send_player(cname, chat_msg)
 			if cname == playername then
 				cname = name
 			end
-			return actual_chatsend(cname, msg)
+			return actual_chatsend(cname, chat_msg)
 		end
 
 		execute_chatcommand(playername, msg)
 
-		core.chat_send_player = actual_chatsend
+		minetest.chat_send_player = actual_chatsend
 	end,
 })
 
@@ -136,7 +136,7 @@ minetest.register_chatcommand("listitems", {
 	params = "<regexp>",
 	description = "Find names of registered items",
 	privs = {},
-	func = function(name, param)
+	func = function(_, param)
 		local names = {}
 		for itemname in pairs(minetest.registered_items) do
 			if string.find(itemname, param) then
