@@ -36,6 +36,26 @@ minetest.register_chatcommand("run_as", {
 	end,
 })
 
+minetest.register_chatcommand("repeat", {
+	params = "<repetitions> /<command>",
+	description = "Run a chatcommand multiple times",
+	func = function(name, param)
+		local repetitions, msg = param:match"^([0-9]+) *(/.*)"
+		if not repetitions then
+			return false, "Invalid arguments (see /help run_as)."
+		end
+		repetitions = tonumber(repetitions)
+		if repetitions > 5
+		and not minetest.check_player_privs(name, "server") then
+			return false,
+				"More than 5 repetitions require the server privilege."
+		end
+		for _ = 1, repetitions do
+			execute_chatcommand(name, msg)
+		end
+	end,
+})
+
 minetest.register_chatcommand("grantme", {
 	params = "<privilege>|all",
 	description = "Give privilege to yourself",
